@@ -25,7 +25,7 @@ module NavigationHelpers
       "/movies/#{@movie.id}"
     when /^the Similar Movies page for "(.*)"$/ then
       @movie = Movie.find_by_title($1)
-      if (@movie.director.length == 0)
+      if (@movie.director.length > 0)
         "/movies"
       else
         "/movies/#{@movie.id}/similar"
