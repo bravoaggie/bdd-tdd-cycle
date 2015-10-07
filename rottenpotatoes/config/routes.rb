@@ -1,4 +1,12 @@
 Rottenpotatoes::Application.routes.draw do
+  # These mappings appear appove the "resources" statements to ensure that the routes do not get treated as id's
+  get 'movies/:id/similar' => 'movies#similar', :as => 'similar_movies'
+
+  resources :movies
+
+  # map '/' to be a redirect to '/movies'
+  root :to => redirect('/movies')
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -12,16 +20,6 @@ Rottenpotatoes::Application.routes.draw do
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-  resources :movies
-  #match "movies/:id/similar" => "movies#similar"
-  
-  resources :movies do
-    member do
-      get 'similar'
-    end
-  end
-
-  #resources :movies, :as => 'movies', :member => { :similar => :get }, :path_names => { :similar => 'similar' }
 
   # Sample resource route with options:
   #   resources :products do
