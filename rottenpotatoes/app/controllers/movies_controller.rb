@@ -5,6 +5,19 @@ class MoviesController < ApplicationController
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
   end
+  
+  # find all the movies with the same director
+  def find
+    #debugger
+    id = params[:id] # retrieve movie ID from URI route
+    m = Movie.find_movies_same_director(id)
+    if m[0].director.empty? or m.length == 0
+      flash[:notice] = "'#{m[0].title}' has no director info"
+      flash.keep
+      redirect_to movies_path
+    end
+    @movies = m 
+  end
 
   def index
     sort = params[:sort] || session[:sort]
@@ -21,9 +34,16 @@ class MoviesController < ApplicationController
       @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
     end
     
-    if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
+    if params[:sort] != session[:sort]
+      session[:sort] = sort
+      flash.keep
+      redirect_to :sort => sort, :ratings => @selected_ratings and return
+    end
+
+    if params[:ratings] != session[:ratings] and @selected_ratings != {}
       session[:sort] = sort
       session[:ratings] = @selected_ratings
+      flash.keep
       redirect_to :sort => sort, :ratings => @selected_ratings and return
     end
     @movies = Movie.find_all_by_rating(@selected_ratings.keys, ordering)
@@ -57,14 +77,4 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
-  def similar
-    @movie = Movie.find(params[:id])
-
-    if @movie.director == nil or @movie.director == ""
-      flash[:warning] = "'#{@movie.title}' has no director info"
-      redirect_to movies_path
-    end
-
-    @movies = Movie.find_all_by_director(@movie.director)
-  end
 end

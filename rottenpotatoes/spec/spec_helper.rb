@@ -1,5 +1,4 @@
-# Add as per instructions in homework 4
-# When running 'rake spec', this should create a coverage report in coverage/ directory
+# Get an unified report for Cucumber and RSpec
 require 'simplecov'
 SimpleCov.start 'rails'
 
@@ -11,7 +10,7 @@ require 'rspec/autorun'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   # ## Mock Framework
